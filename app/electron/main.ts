@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { ChildProcessWithoutNullStreams, exec, spawn } from 'child_process';
 import { app, BrowserWindow, ipcMain, Menu, MenuItem, screen, shell } from 'electron';
 import { IpcMainEvent, MenuItemConstructorOptions } from 'electron/main';
@@ -9,6 +10,8 @@ import os from 'os';
 import path from 'path';
 import url from 'url';
 import yargs from 'yargs';
+import { handleAzureAdAuthFlow, startAzureADLoginFlow } from './azureAdAuth';
+import env from './env.json';
 import i18n from './i18next.config';
 import windowSize from './windowSize';
 
@@ -34,6 +37,7 @@ const defaultPort = 4466;
 
 const isDev = process.env.ELECTRON_DEV || false;
 const useExternalServer = process.env.EXTERNAL_SERVER || false;
+const AZURE_AD_LOGIN_START = 'AZURE_AD_LOGIN_START';
 
 function startServer(flags: string[] = []): ChildProcessWithoutNullStreams {
   const serverFilePath = isDev
@@ -385,12 +389,6 @@ function startElecron() {
       mainWindow.webContents.send('appVersion', appVersion);
     });
 
-    mainWindow.webContents.once('will-navigate', (e, url) => {
-      if (url.startsWith('https://login.microsoftonline.com')) {
-        shell.openExternal(url);
-      }
-    });
-
     mainWindow.on('closed', () => {
       mainWindow = null;
     });
@@ -430,24 +428,32 @@ function startElecron() {
       mainWindow.focus();
       const urlObj = new URL(url);
       const token = urlObj.searchParams.get('token');
+      // if we have received token in urlsearch param then pass it
       if (token) {
-        mainWindow.webContents.send('auth_token', { token });
+        mainWindow.webContents.send('auth_token', token);
+        return;
       }
-      // for pkce oauth 2.0 we get the auth code
-      const authCode = urlObj.hash.split('&')[0];
-      if (authCode !== '') {
-        const code = authCode.split('#code=')[1];
-        if (code) {
-          mainWindow.webContents.send('auth_code', {
-            authCode: code,
-            clientInfo: urlObj.searchParams.get('client_info'),
-          });
+      // check if there is a token in url hash
+      const authTokenHash = urlObj.hash.split('&')[0];
+      if (authTokenHash) {
+        const authToken = authTokenHash.split('#token=')[1];
+        if (authToken) {
+          mainWindow.webContents.send('auth_token', token);
+          return;
         }
+      }
+      // if we have AZURE_AD_AUTHORITY set that means this is a azureAD auth flow
+      if (!!env.AZURE_AD_AUTHORITY) {
+        handleAzureAdAuthFlow(mainWindow, url);
       }
     });
 
     i18n.on('languageChanged', () => {
       setMenu(i18n);
+    });
+
+    ipcMain.on(AZURE_AD_LOGIN_START, () => {
+      startAzureADLoginFlow();
     });
 
     ipcMain.on('locale', (event: IpcMainEvent, newLocale: string) => {
