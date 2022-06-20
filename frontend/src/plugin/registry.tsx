@@ -38,11 +38,12 @@ export default class Registry {
    *
    * @example
    *
-   * ```javascript
-   * register.registerSidebarItem('cluster', 'traces', 'Traces', '/traces');
+   * ```tsx
+   * import { registerSidebarItem } from '@kinvolk/headlamp-plugin/lib';
+   * registerSidebarItem('cluster', 'traces', 'Traces', '/traces');
    * ```
    *
-   * @see {@link http://github.com/kinvolk/headlamp/plugins/examples/podcounter/ podcounter example}
+   * @see {@link http://github.com/kinvolk/headlamp/plugins/examples/podcounter/ Podcounter Example}
    */
   registerSidebarItem(
     parentName: string | null,
@@ -71,10 +72,11 @@ export default class Registry {
    *
    * @example
    *
-   * ```JSX
+   * ```tsx
+   * import { registerRoute } from '@kinvolk/headlamp-plugin/lib';
    * // Add a route that will display the given component and select
    * // the "traces" sidebar item.
-   * register.registerRoute({
+   * registerRoute({
    *   path: '/traces',
    *   sidebar: 'traces',
    *   component: () => <TraceList />
@@ -82,7 +84,7 @@ export default class Registry {
    * ```
    *
    * @see {@link https://github.com/kinvolk/headlamp/blob/main/frontend/src/lib/router.tsx Route examples}
-   * @see {@link http://github.com/kinvolk/headlamp/plugins/examples/sidebar/ sidebar example}
+   * @see {@link http://github.com/kinvolk/headlamp/plugins/examples/sidebar/ Sidebar Example}
    *
    */
   registerRoute(routeSpec: Route) {
@@ -98,8 +100,9 @@ export default class Registry {
    *
    * @example
    *
-   * ```JSX
-   * register.registerDetailsViewHeaderAction('traces', (props) =>
+   * ```tsx
+   * import { registerDetailsViewHeaderAction } from '@kinvolk/headlamp-plugin/lib';
+   * registerDetailsViewHeaderAction('traces', (props) =>
    *   <TraceIcon {...props} />
    * );
    * ```
@@ -121,8 +124,9 @@ export default class Registry {
    *
    * @example
    *
-   * ```JSX
-   * register.registerAppBarAction('monitor', () => <MonitorLink /> );
+   * ```tsx
+   * import { registerRoute } from '@kinvolk/headlamp-plugin/lib';
+   * registerAppBarAction('monitor', () => <MonitorLink /> );
    * ```
    */
   registerAppBarAction(actionName: string, actionFunc: (...args: any[]) => JSX.Element | null) {
@@ -138,7 +142,8 @@ export default class Registry {
    *
    * @example
    *
-   * ```JSX
+   * ```tsx
+   * import { registerDetailsViewSection } from '@kinvolk/headlamp-plugin/lib';
    * function myDetailView({resource: KubeObject}) {
    *   return {
    *    title: 'Block I/O Latency',
@@ -146,10 +151,10 @@ export default class Registry {
    *   }
    * }
    *
-   * register.registerDetailsViewSection("biolatency", myDetailView);
+   * registerDetailsViewSection("biolatency", myDetailView);
    * ```
    *
-   * @see {@link https://github.com/kinvolk/signal-box/blob/a2bec8421fa90c07b8c9fc0635383fa9c2eb3d6e/plugins/biolatency/src/index.tsx#L348|bio-latency-plugin}
+   * @see {@link https://github.com/kinvolk/signal-box/blob/a2bec8421fa90c07b8c9fc0635383fa9c2eb3d6e/plugins/biolatency/src/index.tsx#L348 Bio Latency Plugin}
    */
   registerDetailsViewSection(sectionName: string, sectionFunc: sectionFunc) {
     store.dispatch(setDetailsView(sectionName, sectionFunc));
@@ -182,21 +187,21 @@ export default class Registry {
   /**
    * Use a custom cluster chooser button
    *
-   * @param component is a React Component that takes one required props ```JSX clickHandler``` which is the
+   * @param component is a React Component that takes one required props ```tsx clickHandler``` which is the
    * action handler that happens when the custom chooser button component click event occurs
    *
    * @example
-   * ```JSX
-   * import { ClusterChooserProps } from '@kinvolk/headlamp-plugin/lib';
+   * ```tsx
+   * import { ClusterChooserProps, registerClusterChooser } from '@kinvolk/headlamp-plugin/lib';
    *
    * function MyClusterChooser(props: ClusterChooserProps) {
    *   return <button onClick={clickHandler}>my chooser</button>;
    * }
    *
-   * registry.registerClusterChooser(MyClusterChooser)
+   * registerClusterChooser(MyClusterChooser)
    * ```
    *
-   * @see {@link http://github.com/kinvolk/headlamp/plugins/examples/clusterchooser/ cluster chooser example}
+   * @see {@link http://github.com/kinvolk/headlamp/plugins/examples/clusterchooser/ Cluster Chooser Example}
    *
    */
   registerClusterChooser(component: React.ComponentType<ClusterChooserProps> | null) {
@@ -227,11 +232,12 @@ export default class Registry {
  *
  * @example
  *
- * ```javascript
- * register.registerSidebarItem('cluster', 'traces', 'Traces', '/traces');
+ * ```tsx
+ * import { registerSidebarItem } from '@kinvolk/headlamp-plugin/lib';
+ * registerSidebarItem('cluster', 'traces', 'Traces', '/traces');
  * ```
  *
- * @see {@link http://github.com/kinvolk/headlamp/plugins/examples/podcounter/ podcounter example}
+ * @see {@link http://github.com/kinvolk/headlamp/plugins/examples/podcounter/ Podcounter Example}
  */
 export function registerSidebarItem(
   parentName: string | null,
@@ -260,10 +266,11 @@ export function registerSidebarItem(
  *
  * @example
  *
- * ```JSX
+ * ```tsx
+ * import { registerRoute } from '@kinvolk/headlamp-plugin/lib';
  * // Add a route that will display the given component and select
  * // the "traces" sidebar item.
- * register.registerRoute({
+ * registerRoute({
  *   path: '/traces',
  *   sidebar: 'traces',
  *   component: () => <TraceList />
@@ -271,7 +278,7 @@ export function registerSidebarItem(
  * ```
  *
  * @see {@link https://github.com/kinvolk/headlamp/blob/main/frontend/src/lib/router.tsx Route examples}
- * @see {@link http://github.com/kinvolk/headlamp/plugins/examples/sidebar/ sidebar example}
+ * @see {@link http://github.com/kinvolk/headlamp/plugins/examples/sidebar/ Sidebar Example}
  *
  */
 export function registerRoute(routeSpec: Route) {
@@ -287,13 +294,14 @@ export function registerRoute(routeSpec: Route) {
  *
  * @example
  *
- * ```JSX
- * register.registerDetailsViewHeaderAction('traces', (props) =>
+ * ```tsx
+ * import { registerDetailsViewHeaderAction } from '@kinvolk/headlamp-plugin/lib';
+ * registerDetailsViewHeaderAction('traces', (props) =>
  *   <TraceIcon {...props} />
  * );
  * ```
  *
- * @see {@link https://github.com/kinvolk/signal-box/blob/a2bec8421fa90c07b8c9fc0635383fa9c2eb3d6e/plugins/ig-traces/src/index.js#L346 used in ig-traces plugin}
+ * @see {@link https://github.com/kinvolk/signal-box/blob/a2bec8421fa90c07b8c9fc0635383fa9c2eb3d6e/plugins/ig-traces/src/index.js#L346 Used in ig-traces Plugin}
  */
 export function registerDetailsViewHeaderAction(
   actionName: string,
@@ -310,8 +318,9 @@ export function registerDetailsViewHeaderAction(
  *
  * @example
  *
- * ```JSX
- * register.registerAppBarAction('monitor', () => <MonitorLink /> );
+ * ```tsx
+ * import { registerAppBarAction } from '@kinvolk/headlamp-plugin/lib';
+ * registerAppBarAction('monitor', () => <MonitorLink /> );
  * ```
  */
 export function registerAppBarAction(
@@ -330,7 +339,8 @@ export function registerAppBarAction(
  *
  * @example
  *
- * ```JSX
+ * ```tsx
+ * import { registerDetailsViewSection } from '@kinvolk/headlamp-plugin/lib';
  * function myDetailView({resource: KubeObject}) {
  *   return {
  *    title: 'Block I/O Latency',
@@ -338,10 +348,10 @@ export function registerAppBarAction(
  *   }
  * }
  *
- * register.registerDetailsViewSection("biolatency", myDetailView);
+ * registerDetailsViewSection("biolatency", myDetailView);
  * ```
  *
- * @see {@link https://github.com/kinvolk/signal-box/blob/a2bec8421fa90c07b8c9fc0635383fa9c2eb3d6e/plugins/biolatency/src/index.tsx#L348|bio-latency-plugin}
+ * @see {@link https://github.com/kinvolk/signal-box/blob/a2bec8421fa90c07b8c9fc0635383fa9c2eb3d6e/plugins/biolatency/src/index.tsx#L348 Bio Latency Plugin}
  */
 export function registerDetailsViewSection(sectionName: string, sectionFunc: sectionFunc) {
   store.dispatch(setDetailsView(sectionName, sectionFunc));
@@ -374,18 +384,18 @@ export function registerAppLogo(logo: AppLogoType) {
 /**
  * Use a custom cluster chooser button
  *
- * @param component is a React Component that takes one required props ```JSX clickHandler``` which is the
+ * @param component is a React Component that takes one required props ```clickHandler``` which is the
  * action handler that happens when the custom chooser button component click event occurs
  *
  * @example
- * ```JSX
- * import { ClusterChooserProps } from '@kinvolk/headlamp-plugin/lib';
+ * ```tsx
+ * import { ClusterChooserProps, registerClusterChooser } from '@kinvolk/headlamp-plugin/lib';
  *
  * function MyClusterChooser(props: ClusterChooserProps) {
  *   return <button onClick={clickHandler}>my chooser</button>;
  * }
  *
- * registry.registerClusterChooser(MyClusterChooser)
+ * registerClusterChooser(MyClusterChooser)
  * ```
  *
  * @see {@link http://github.com/kinvolk/headlamp/plugins/examples/clusterchooser/ Cluster Chooser example}
