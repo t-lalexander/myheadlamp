@@ -2,6 +2,8 @@
 
 This example plugin shows how to override the default available "clusterchooser" button.
 
+![screenshot of the cluster chooser button](../../../docs/development/plugins/images/clusterchooser.png)
+
 To run the plugin with [node.js](https://nodejs.org/en/) installed:
 
 ```bash
@@ -13,8 +15,6 @@ npm start
 ```
 
 The main code for the plugin is in [src/index.tsx](src/index.tsx).
-
-<img src="" />
 
 ## Further information
 
